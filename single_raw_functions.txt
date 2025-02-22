@@ -1,0 +1,101 @@
+--Task 1
+--Write an SQL query for the Employees table that retrieves the employees
+--' first name, last name, and a third column that displays 'SALARY AND COMM' 
+--if there is a value in the commission_pct column; otherwise, it should display 'SALARY' (using a function).
+
+select first_name, last_name, commission_pct,
+	nvl2(commission_pct,'salary_and_com','salary')
+from hr.employees
+
+--Task 2
+--Write an SQL query for the Employees table that retrieves the employees' 
+--first name, last name, and a third column that displays
+--the number of letters in the first name if the number of letters in the first name and last name are different;
+--otherwise, it should display NULL.
+select first_name, last_name, 
+    case when length(first_name)<>length(last_name) then length(first_name)
+    else NULL 
+    end as lenght_first_name
+from hr.employees
+
+--Task3
+--Write an SQL query for the Employees table that retrieves the employees' first name, last name, department ID,
+--and a fourth column that displays:
+--'Manager' if the employee works in department 10
+--'SubManager' if the employee works in department 20
+--'Other' otherwise
+    
+SELECT  
+    first_name,  
+    last_name, 
+    department_id, 
+    CASE  
+        WHEN department_id = 10 THEN 'Manager' 
+    	WHEN department_id = 20 THEN 'SubManager' 
+        ELSE 'Other' 
+    END AS profile 
+FROM hr.employees
+
+--Task 4
+--Write an SQL query for the Employees table that retrieves the employees' first name, last name, salary, 
+--and a fourth column that displays:
+--'High' if the employee's salary is greater than 10,000
+--'Medium' if the salary is greater than 5,000 but less than or equal to 10,000
+--'Low' otherwise
+SELECT  
+    first_name,  
+    last_name, 
+    salary, 
+    CASE  
+        WHEN salary > 10.000 THEN 'high' 
+    	WHEN salary > 5000 and salary < 10.000 THEN 'medium' 
+        ELSE 'low' 
+    END AS profile 
+FROM hr.employees
+
+--Task 5
+--Apply the TO_NUMBER function to the amount '$1,600.00' using the DUAL pseudo-table.
+
+select to_number('$1,600.00','$9,999,999.99') as numbers from dual
+
+--Task 6
+--In the Employees table, after concatenating the last_name and first_name columns:
+--If any of the three characters starting from the 5th position is 'a' or 'A', they should be removed.
+
+SELECT  
+    substr(first_name || last_name, 5, 3) as subname 
+FROM hr.employees 
+   where  substr(first_name || last_name, 5, 3) like '%a%'  
+   OR substr(first_name || last_name, 5, 3) LIKE '%A%'
+
+--Task 7
+--For the Departments table, find the names where the number of characters is even,
+--and extract the two middle adjacent characters from those names.
+SELECT  
+    department_name, substr(department_name,length(department_name)/2,2) as middle_caracters
+FROM hr.departments
+   where  mod(length(department_name),2)=0
+
+-- Task 8
+--Display the list of employees from the Employees table whose last name contains no more than 7 characters.
+
+select 
+    first_name, last_name 
+from hr.employees
+	where length(last_name ) < 7
+
+-- Task 9
+Extract the last three characters from the first names of employees in the Employees table.
+
+select
+	first_name, substr(first_name,-3,3)
+from hr.employees
+
+--Task 10
+--Retrieve the employees from the Employees table who were hired in the months of March and September.
+
+select 
+    first_name, last_name 
+from hr.employees
+	where extract(month from hire_date) in (03,09)
+
