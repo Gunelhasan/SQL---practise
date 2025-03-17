@@ -1,0 +1,148 @@
+--Task 21
+--Query to show how many employees were hired each year (two columns: hiring year, count):
+
+SELECT
+	EXTRACT(YEAR FROM HIRE_DATE) AS QEBUL_ILI, COUNT(EMPLOYEE_ID) AS SAY
+FROM HR.EMPLOYEES
+	GROUP BY EXTRACT(YEAR FROM HIRE_DATE)
+
+--Task 22
+--Query to show how many employees were hired each year per department (three columns: department_id, hiring year, count):
+
+SELECT
+	DEPARTMENT_ID, EXTRACT(YEAR FROM HIRE_DATE) AS QEBUL_ILI, COUNT(EMPLOYEE_ID) AS SAY
+FROM HR.EMPLOYEES
+	GROUP BY EXTRACT(YEAR FROM HIRE_DATE), DEPARTMENT_ID
+
+--Task 23
+--Query to show department_id, department_name, average salary, maximum salary, minimum salary, 
+and the list of employee names (separated by commas):
+
+SELECT 
+    E.DEPARTMENT_ID, 
+    D.DEPARTMENT_NAME, 
+    AVG(E.SALARY) AS ORTA_SALARY, 
+    MAX(E.SALARY) AS MAX_SALARY, 
+    MIN(E.SALARY) AS MIN_SALARY, 
+    LISTAGG(E.FIRST_NAME, ', ') WITHIN GROUP (ORDER BY E.FIRST_NAME) AS ISCILER
+FROM HR.EMPLOYEES E
+JOIN HR.DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+GROUP BY E.DEPARTMENT_ID, D.DEPARTMENT_NAME
+
+--Task 24
+--Query to show how many departments exist for each location_id:
+
+SELECT
+	LOCATION_ID, COUNT(DEPARTMENT_ID) AS SAY
+FROM HR.DEPARTMENTS
+	GROUP BY LOCATION_ID
+
+--Task 25
+--Query to show how many cities exist for each country_id in the locations table:
+
+SELECT
+	COUNTRY_ID, COUNT(CITY) AS SAY
+FROM HR.LOCATIONS
+	GROUP BY COUNTRY_ID
+
+--Task 26
+--Query to show the number of employees hired in even months, their total salary, and the average salary:
+
+SELECT 
+    EXTRACT(MONTH FROM HIRE_DATE) AS AY, 
+    COUNT(*) AS ISCILERIN_SAYI,
+    SUM(SALARY) AS CEM_MAAS, 
+    AVG(SALARY) AS ORTA_MAAS
+FROM HR.EMPLOYEES
+WHERE MOD(EXTRACT(MONTH FROM HIRE_DATE), 2) = 0
+GROUP BY EXTRACT(MONTH FROM HIRE_DATE)
+
+--Task 27
+--Query to show the total salary including commission (if available) for employees:
+
+SELECT 
+    SUM(SALARY + (SALARY * NVL(COMMISSION_PCT, 0))) AS UMUMI_MAAS
+FROM HR.EMPLOYEES
+
+--Task 28
+--Query to show the department names for each region, ordered alphabetically and separated by commas:
+
+SELECT 
+    R.REGION_NAME, 
+    LISTAGG(D.DEPARTMENT_NAME, ', ') WITHIN GROUP (ORDER BY D.DEPARTMENT_NAME) AS DEPARTAMENT_ADLARI
+FROM HR.REGIONS R
+JOIN HR.COUNTRIES C ON R.REGION_ID = C.REGION_ID
+JOIN HR.LOCATIONS L ON C.COUNTRY_ID = L.COUNTRY_ID
+JOIN HR.DEPARTMENTS D ON L.LOCATION_ID = D.LOCATION_ID
+GROUP BY R.REGION_NAME
+ORDER BY R.REGION_NAME
+
+--Task 29
+--Query to show department_id and average salary for employees with even employee_id:
+
+SELECT 
+    DEPARTMENT_ID,
+    AVG(SALARY) AS ORTA_MAAS
+FROM HR.EMPLOYEES
+WHERE MOD(EMPLOYEE_ID, 2) = 0
+GROUP BY DEPARTMENT_ID
+
+--Task 30
+--Query to show how many employees were hired each month (two columns: hiring month, count):
+
+SELECT 
+    EXTRACT(MONTH FROM HIRE_DATE) AS QEBUL_AYI,
+    COUNT(EMPLOYEE_ID) AS ISCILERIN_SAYI
+FROM HR.EMPLOYEES
+GROUP BY EXTRACT(MONTH FROM HIRE_DATE)
+
+--Task 31
+--Query to show how many employees were hired each month per department (three columns: department_id, hiring month, count):
+
+SELECT 
+    DEPARTMENT_ID,
+    EXTRACT(MONTH FROM HIRE_DATE) AS QEBUL_AYI,
+    COUNT(EMPLOYEE_ID) AS ISCILERIN_SAYI
+FROM HR.EMPLOYEES
+GROUP BY EXTRACT(MONTH FROM HIRE_DATE), DEPARTMENT_ID
+
+--Task 32
+-Query to show manager’s name, average salary, maximum salary, minimum salary, 
+and a list of employee names (separated by commas) for each manager:
+
+SELECT 
+    M.FIRST_NAME || ' ' || M.LAST_NAME AS MANAGER_ADI,
+    ROUND(AVG(E.SALARY), 2) AS ORTA_SALARY,
+    MAX(E.SALARY) AS MAX_SALARY,
+    MIN(E.SALARY) AS MIN_SALARY,
+    LISTAGG(E.FIRST_NAME || ' ' || E.LAST_NAME, ', ') WITHIN GROUP (ORDER BY E.FIRST_NAME, E.LAST_NAME) AS ISCILER
+FROM HR.EMPLOYEES E
+JOIN HR.EMPLOYEES M ON E.MANAGER_ID = M.EMPLOYEE_ID
+GROUP BY M.FIRST_NAME, M.LAST_NAME
+
+--Task 33
+--Query to show the number of employees, average salary, minimum salary, and maximum salary for each region:
+    
+SELECT 
+    R.REGION_NAME,
+    COUNT(E.EMPLOYEE_ID) AS ISCILERIN_SAYI,
+    ROUND(AVG(E.SALARY), 2) AS ORTA_SALARY,
+    MIN(E.SALARY) AS MIN_SALARY,
+    MAX(E.SALARY) AS MAX_SALARY
+FROM HR.REGIONS R
+JOIN HR.COUNTRIES C ON R.REGION_ID = C.REGION_ID
+JOIN HR.LOCATIONS L ON C.COUNTRY_ID = L.COUNTRY_ID
+JOIN HR.DEPARTMENTS D ON L.LOCATION_ID = D.LOCATION_ID
+JOIN HR.EMPLOYEES E ON D.DEPARTMENT_ID = E.DEPARTMENT_ID
+GROUP BY R.REGION_NAME
+
+
+--Task 35
+--Query to show job_id and the count of employees for job_ids where the number of employees is not less than 20:
+
+SELECT
+	JOB_ID, COUNT(EMPLOYEE_ID
+    )
+FROM HR.EMPLOYEES
+GROUP BY JOB_ID
+HAVING COUNT(EMPLOYEE_ID) >20
