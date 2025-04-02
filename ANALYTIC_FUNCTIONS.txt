@@ -1,0 +1,83 @@
+Mövzu: Analytic functions - 1
+
+--Task 1
+For each employee, retrieve their first name, last name, salary, and in the fourth column, display their ranking based on salary using ROW_NUMBER(), RANK(), and DENSE_RANK().
+
+SELECT
+    FIRST_NAME,
+    LAST_NAME,
+    SALARY,
+    ROW_NUMBER () OVER ( ORDER BY SALARY DESC) AS ROW_NUM,
+    RANK () OVER ( ORDER BY SALARY DESC) AS RANK_NUM,
+    DENSE_RANK () OVER ( ORDER BY SALARY DESC) AS DENS_RANK
+FROM HR.EMPLOYEES
+    
+--Task 2
+For each employee, retrieve their first name, last name, salary, and in the fourth column, display a unique ranking number based on their salary. (ROW_NUMBER())
+
+SELECT
+    FIRST_NAME,
+    LAST_NAME,
+    SALARY,
+    ROW_NUMBER () OVER ( ORDER BY SALARY DESC) AS ROW_NUM
+FROM HR.EMPLOYEES
+    
+--Task 3
+For each employee, display their first name, last name, salary, and in the fourth column, show their ranking based on salary (employees with the same salary should have the same rank).
+
+ SELECT
+    FIRST_NAME,
+    LAST_NAME,
+    SALARY,
+    RANK () OVER ( ORDER BY SALARY DESC) AS RANK_NUM
+FROM HR.EMPLOYEES   
+
+--Task 4
+For each employee, display their first name, last name, salary, and in the fourth column, show their ranking based on salary
+ (employees with the same salary should have the same rank, and the ranking should be consecutive without gaps).
+
+SELECT
+    FIRST_NAME,
+    LAST_NAME,
+    SALARY,
+    DENSE_RANK () OVER ( ORDER BY SALARY DESC) AS DRANK_NUM
+FROM HR.EMPLOYEES  
+
+
+
+--Task 5
+For each employee, display their first name, last name, salary, and in the fourth column, 
+show their unique ranking within their department based on salary.
+
+SELECT
+    FIRST_NAME,
+    LAST_NAME,
+    SALARY,
+    DEPARTMENT_ID,
+    ROW_NUMBER () OVER ( PARTITION BY DEPARTMENT_ID ORDER BY SALARY DESC) AS ROW_NUM
+FROM HR.EMPLOYEES
+    
+    
+--Task 6
+For each employee, display their first name, last name, department name, and in the fourth column, show the total salary of their department.
+
+SELECT
+    E.FIRST_NAME,
+    E.LAST_NAME,
+    E.SALARY,
+    D.DEPARTMENT_NAME,
+SUM (E.SALARY) OVER (PARTITION BY E.DEPARTMENT_ID) AS TOTALLY
+FROM HR.EMPLOYEES E
+JOIN HR.DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
+    
+--Task 7
+For each employee, display their first name, last name, department name, and in the fourth column, show the total salary of all employees.
+    
+SELECT
+    E.FIRST_NAME,
+    E.LAST_NAME,
+    E.SALARY,
+    D.DEPARTMENT_NAME,
+SUM (E.SALARY) OVER () AS TOTALLY
+FROM HR.EMPLOYEES E
+JOIN HR.DEPARTMENTS D ON E.DEPARTMENT_ID = D.DEPARTMENT_ID
