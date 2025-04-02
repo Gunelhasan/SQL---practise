@@ -1,5 +1,5 @@
 # SQL---practise
-This repository contains SQL practice tasks focused on different SQL concepts.   Currently, it includes tasks related to **single-row functions**, **aggregate functions** in SQL. <br/>
+This repository contains SQL practice tasks focused on different SQL concepts.   Currently, it includes tasks related to **single-row functions**, **aggregate functions**, **analytic functions** in SQL. <br/>
 - **Platform:** Oracle Live SQL  
 - **Schema Used:** HR sample schema  
 - **Tables Referenced:**  
